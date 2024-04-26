@@ -1,0 +1,7 @@
+#!/bin/bash
+
+HOME_DIR="$USERPROFILE"
+
+exe_tool="$HOME_DIR\templates\Watchlist-CLI.exe"
+
+"$exe_tool" "$@"
