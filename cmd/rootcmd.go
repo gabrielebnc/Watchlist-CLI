@@ -3,12 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
-)
-
-const (
-	softwareVersion = "0.1"
 )
 
 var (
@@ -22,11 +19,12 @@ var (
 		},
 	}
 
-	versionCmd = &cobra.Command{
-		Use:   "version",
-		Short: "Prints the version of Watchlist CLI",
+	testCmd = &cobra.Command{
+		Use:   "testcmd ...strings",
+		Short: "prints the given string to test the tool functionality",
+		Args:  cobra.ArbitraryArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			output := fmt.Sprintf("Watchlist CLI: v%v", softwareVersion)
+			output := strings.Join(args, " ")
 			fmt.Fprintln(os.Stdout, output)
 		},
 	}
@@ -40,5 +38,10 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+
+	rootCmd.Version = "0.0.1"
+	rootCmd.SetVersionTemplate(fmt.Sprintf("Watchlist CLI version %v", rootCmd.Version))
+
+	rootCmd.AddCommand(testCmd)
+
 }
