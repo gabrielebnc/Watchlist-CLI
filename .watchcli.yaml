@@ -1,0 +1,3 @@
+watchcli:
+    configs:
+        persistencePath: "C:\\Users\\gabri\\templates\\persist.txt"
