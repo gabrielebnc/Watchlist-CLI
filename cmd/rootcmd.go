@@ -15,7 +15,7 @@ var (
 		Long:  "Watchlist CLI is a tool to have your own Youtube (or any other video service) watchlist via CLI",
 
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Fprintln(os.Stdout, "Roooooot")
+			fmt.Fprintln(os.Stdout, "Root Command, use 'watch --help' to see more")
 		},
 	}
 
@@ -43,5 +43,5 @@ func init() {
 	rootCmd.SetVersionTemplate(fmt.Sprintf("Watchlist CLI version %v", rootCmd.Version))
 
 	rootCmd.AddCommand(testCmd)
-
+	rootCmd.AddCommand(getCmd)
 }
