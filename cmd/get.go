@@ -32,7 +32,5 @@ var (
 
 func init() {
 
-	cobra.OnInitialize(InitFunc)
-
 	persistence_path = viper.GetString("watchcli.configs.persistencePath")
 }

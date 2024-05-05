@@ -67,7 +67,9 @@ func init() {
 	rootCmd.Version = "0.0.1"
 	rootCmd.SetVersionTemplate(fmt.Sprintf("Watchlist CLI version %v", rootCmd.Version))
 
+	InitFunc()
+
 	rootCmd.AddCommand(testCmd)
 	rootCmd.AddCommand(getCmd)
-	//rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(addCmd)
 }

@@ -11,7 +11,7 @@ import (
 
 var (
 	addCmd = &cobra.Command{
-		Use:   "add string",
+		Use:   "add item",
 		Short: "Add Command for Watchlist CLI",
 		Long:  "Adds an item to the Watchlist",
 
@@ -30,8 +30,6 @@ var (
 )
 
 func init() {
-
-	cobra.OnInitialize(InitFunc)
 
 	persistence_path = viper.GetString("watchcli.configs.persistencePath")
 }

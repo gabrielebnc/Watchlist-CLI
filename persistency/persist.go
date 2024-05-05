@@ -10,6 +10,8 @@ func ReadAllLines(path string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	lines := make([]string, 0)
@@ -28,14 +30,18 @@ func PersistItem(item string, path string) error {
 	if err != nil {
 		return err
 	}
-	_, err = file.Write([]byte(item))
-	if err != nil {
-		file.Close()
-		return err
-	}
-	err = file.Close()
+	defer file.Close()
+
+	writer := bufio.NewWriter(file)
+	_, err = writer.WriteString(item + "\n")
 	if err != nil {
 		return err
 	}
+
+	err = writer.Flush()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
