@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var ReadAllLines = func(path string) ([]string, error) {
+func ReadAllLines(path string) ([]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -21,4 +21,21 @@ var ReadAllLines = func(path string) ([]string, error) {
 	}
 
 	return lines, nil
+}
+
+func PersistItem(item string, path string) error {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	_, err = file.Write([]byte(item))
+	if err != nil {
+		file.Close()
+		return err
+	}
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+	return nil
 }
