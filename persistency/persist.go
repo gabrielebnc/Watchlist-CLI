@@ -2,6 +2,8 @@ package persistency
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"os"
 )
 
@@ -43,5 +45,32 @@ func PersistItem(item string, path string) error {
 		return err
 	}
 
+	return nil
+}
+
+func RemoveLineAtIndex(path string, index int) (err error) {
+	f, err := os.OpenFile(path, os.O_RDWR, 0644)
+	if err != nil {
+		return fmt.Errorf("error while removing: file opening failed")
+	}
+	scanner := bufio.NewScanner(f)
+	var bs []byte
+	buf := bytes.NewBuffer(bs)
+
+	var lineIndex int
+	var text string
+	for scanner.Scan() {
+		lineIndex++
+		text = scanner.Text()
+		if lineIndex != index {
+			_, err := buf.WriteString(text + "\n")
+			if err != nil {
+				return fmt.Errorf("error while removing: line replacement")
+			}
+		}
+	}
+	f.Truncate(0)
+	f.Seek(0, 0)
+	buf.WriteTo(f)
 	return nil
 }

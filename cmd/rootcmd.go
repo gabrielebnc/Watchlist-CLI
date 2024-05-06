@@ -72,4 +72,5 @@ func init() {
 	rootCmd.AddCommand(testCmd)
 	rootCmd.AddCommand(getCmd)
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(removeCmd)
 }
