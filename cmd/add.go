@@ -11,7 +11,7 @@ import (
 
 var (
 	addCmd = &cobra.Command{
-		Use:   "add item",
+		Use:   "add <item>",
 		Short: "Add Command for Watchlist CLI",
 		Long:  "Adds an item to the Watchlist",
 
