@@ -5,10 +5,30 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
+func addPrefixToPath(prefix string, path string) string {
+
+	//Case where using tilde -> add user home dir in the prefix
+    if prefix[:1] == "~" {
+        homeDir, err := os.UserHomeDir()
+        if err != nil {
+            fmt.Println("Error getting user home directory:", err)
+            return ""
+        }
+        prefix = filepath.Join(homeDir, prefix[1:])
+    }
+
+    // Join prefix and path
+    fullPath := filepath.Join(prefix, path)
+    return fullPath
+}
+
+
 func ReadAllLines(path string) ([]string, error) {
-	file, err := os.Open(path)
+
+	file, err := os.Open(addPrefixToPath("~", path))
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +48,7 @@ func ReadAllLines(path string) ([]string, error) {
 }
 
 func PersistItem(item string, path string) error {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	file, err := os.OpenFile(addPrefixToPath("~", path), os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
@@ -49,7 +69,7 @@ func PersistItem(item string, path string) error {
 }
 
 func RemoveLineAtIndex(path string, index int) (err error) {
-	f, err := os.OpenFile(path, os.O_RDWR, 0644)
+	f, err := os.OpenFile(addPrefixToPath("~", path), os.O_RDWR, 0644)
 	if err != nil {
 		return fmt.Errorf("error while removing: file opening failed")
 	}
