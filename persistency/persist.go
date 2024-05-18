@@ -6,25 +6,26 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/gabrielebnc/Watchlist-CLI/utils"
 )
 
 func addPrefixToPath(prefix string, path string) string {
 
 	//Case where using tilde -> add user home dir in the prefix
-    if prefix[:1] == "~" {
-        homeDir, err := os.UserHomeDir()
-        if err != nil {
-            fmt.Println("Error getting user home directory:", err)
-            return ""
-        }
-        prefix = filepath.Join(homeDir, prefix[1:])
-    }
+	if prefix[:1] == "~" {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			utils.PrintfSTDERR("Error getting user home directory: %v", err)
+			return ""
+		}
+		prefix = filepath.Join(homeDir, prefix[1:])
+	}
 
-    // Join prefix and path
-    fullPath := filepath.Join(prefix, path)
-    return fullPath
+	// Join prefix and path
+	fullPath := filepath.Join(prefix, path)
+	return fullPath
 }
-
 
 func ReadAllLines(path string) ([]string, error) {
 

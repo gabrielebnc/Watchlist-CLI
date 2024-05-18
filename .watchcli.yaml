@@ -1,3 +1,4 @@
 watchcli:
     configs:
         persistencePath: "templates\\persist.txt"
+        youtubeApiKey: "" #fill in

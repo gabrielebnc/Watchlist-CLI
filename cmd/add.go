@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/gabrielebnc/Watchlist-CLI/persistency"
+	"github.com/gabrielebnc/Watchlist-CLI/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -19,17 +17,17 @@ var (
 
 		Run: func(cmd *cobra.Command, args []string) {
 
-			err := persistency.PersistItem(args[0], persistence_path)
+			err := persistency.PersistItem(args[0], persistencePath)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				utils.PrintfSTDERR("Error saving item: %v", err)
 				return
 			}
-			fmt.Fprintln(os.Stdout, "Successfully added item.")
+			utils.PrintfSTDOUT("Successfully added item.")
 		},
 	}
 )
 
 func init() {
 
-	persistence_path = viper.GetString("watchcli.configs.persistencePath")
+	persistencePath = viper.GetString("watchcli.configs.persistencePath")
 }

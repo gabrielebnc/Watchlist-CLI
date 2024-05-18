@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/gabrielebnc/Watchlist-CLI/persistency"
+	"github.com/gabrielebnc/Watchlist-CLI/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,21 +22,21 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			index, err := strconv.Atoi(args[0])
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "Index must be an integer")
+				utils.PrintfSTDERR("Index must be an integer")
 				return
 			}
 
-			err = persistency.RemoveLineAtIndex(persistence_path, index)
+			err = persistency.RemoveLineAtIndex(persistencePath, index)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				utils.PrintfSTDERR("Error removing line: %v", err)
 				return
 			}
-			fmt.Fprintln(os.Stdout, "Deleted successfully")
+			utils.PrintfSTDOUT("Deleted successfully")
 		},
 	}
 )
 
 func init() {
 
-	persistence_path = viper.GetString("watchcli.configs.persistencePath")
+	persistencePath = viper.GetString("watchcli.configs.persistencePath")
 }
