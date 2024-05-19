@@ -31,8 +31,12 @@ if [ -e "$script_path" ]; then
 fi
 
 if [ -e "$config_path" ]; then
-    echo "Removing old configs: $config_path"
+    echo "Old configs found: $config_path"
+    echo "Delete them and run installation again to install new configs"
+else
     rm "$config_path"
+    cp ".watchcli.yaml" "$config_path"
+    echo "Added configs in $config_path"
 fi
 
 
@@ -40,5 +44,4 @@ cp "$build_exe" "$exe_path"
 echo "Added exe in $exe_path"
 cp "$watch_script" "$script_path"
 echo "Added script in $script_path"
-cp ".watchcli.yaml" "$config_path"
-echo "Added configs in $config_path"
+
