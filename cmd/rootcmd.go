@@ -63,7 +63,7 @@ func InitFunc() {
 	cobra.CheckErr(viper.ReadConfig(bytes.NewBuffer(configsBytes)))
 
 	rootCmd.PersistentFlags().StringVar(&persistencePath, "persistencePath", viper.GetString("watchcli.configs.persistencePath"), "Path of the persistence file")
-	rootCmd.PersistentFlags().StringVar(&youtubeApiKey, "persistencePath", viper.GetString("watchcli.configs.persistencePath"), "Path of the persistence file")
+	rootCmd.PersistentFlags().StringVar(&youtubeApiKey, "youtubeApiKey", viper.GetString("watchcli.configs.youtubeApiKey"), "API Key for YouTube functionalities")
 
 }
 
@@ -78,4 +78,5 @@ func init() {
 	rootCmd.AddCommand(getCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(removeCmd)
+	rootCmd.AddCommand(infoCmd)
 }

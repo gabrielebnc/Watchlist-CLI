@@ -1,5 +1,4 @@
-// package youtubeapi
-package main
+package youtube
 
 import (
 	"context"
@@ -20,6 +19,10 @@ type VideoInfo struct {
 const (
 	maxResults = 1
 )
+
+func (v *VideoInfo) Fstring() string {
+	return fmt.Sprintf("Title: %v\nChannel:%v\nDuration:%v\n", v.title, v.channelName, v.duration)
+}
 
 func formatDuration(d duration.Duration) string {
 
