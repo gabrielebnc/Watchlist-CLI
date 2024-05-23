@@ -38,9 +38,29 @@ var (
 				if linesCount == 0 {
 					utils.PrintfSTDOUT("No items in the watchlist.\nAdd one using 'watch add <url>'")
 				}
-				for i, item := range allLines {
-					utils.PrintfSTDOUT("%v.\n %v", i+1, item)
+				vIds := make([]string, 0)
+				for _, item := range allLines {
+					u, err := url.Parse(item)
+
+					if err != nil {
+						utils.PrintfSTDERR("Error parsing URL: %v", item)
+						vIds = append(vIds, "")
+					}
+
+					q := u.Query()
+
+					vQueryParams := q["v"]
+					if len(vQueryParams) < 1 {
+						utils.PrintfSTDERR("Couldn't find a videoId in the given URL: %v", item)
+						vIds = append(vIds, "")
+					}
+
+					vIds = append(vIds, vQueryParams[0])
 				}
+				for index, vInfo := range *youtube.SearchVideosByIds(vIds, youtubeApiKey) {
+					utils.PrintfSTDOUT("%v.\n%v\n", index+1, vInfo.Fstring())
+				}
+
 				return
 			}
 
@@ -61,7 +81,7 @@ var (
 				}
 				vInfo := youtube.SearchVideoById(vQueryParams[0], youtubeApiKey)
 
-				utils.PrintfSTDOUT("Getting info for element #%v in the watchlist\n%v.\n%v", index, index, vInfo.Fstring())
+				utils.PrintfSTDOUT("Getting info for element #%v in the watchlist:\n%v", index, vInfo.Fstring())
 				return
 			} else if err != nil {
 				utils.PrintfSTDERR("Invalid argument: %v", arg)

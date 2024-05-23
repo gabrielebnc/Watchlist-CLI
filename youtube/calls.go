@@ -21,7 +21,7 @@ const (
 )
 
 func (v *VideoInfo) Fstring() string {
-	return fmt.Sprintf("Title: %v\nChannel:%v\nDuration:%v\n", v.title, v.channelName, v.duration)
+	return fmt.Sprintf("Title: %v\nChannel:%v\nDuration:%v", v.title, v.channelName, v.duration)
 }
 
 func formatDuration(d duration.Duration) string {
@@ -33,14 +33,17 @@ func formatDuration(d duration.Duration) string {
 	return fmt.Sprintf("%v:%v:%v", d.TH, d.TM, d.TS)
 }
 
-func SearchVideoById(videoId string, apiKey string) VideoInfo {
-
+func generateYoutubeService(apiKey string) *youtube.Service {
 	ctx := context.Background()
 	youtubeService, err := youtube.NewService(ctx, option.WithAPIKey(apiKey))
 
 	if err != nil {
 		utils.PrintfSTDERR("Error creating Youtube Service: %v", err)
 	}
+	return youtubeService
+}
+
+func getVideoInfoByVideoId(youtubeService *youtube.Service, videoId string) VideoInfo {
 
 	call := youtubeService.Videos.
 		List([]string{"snippet", "contentDetails"}).
@@ -69,4 +72,53 @@ func SearchVideoById(videoId string, apiKey string) VideoInfo {
 		channelName: videoItem.Snippet.ChannelTitle,
 		duration:    videoDuration,
 	}
+}
+
+func SearchVideoById(videoId string, apiKey string) VideoInfo {
+
+	youtubeService := generateYoutubeService(apiKey)
+
+	return getVideoInfoByVideoId(youtubeService, videoId)
+}
+
+func SearchVideosInfoByIds(youtubeService *youtube.Service, videoId string) VideoInfo {
+	call := youtubeService.Videos.
+		List([]string{"snippet", "contentDetails"}).
+		Id(videoId).
+		MaxResults(maxResults)
+
+	response, err := call.Do()
+	if err != nil {
+		utils.PrintfSTDERR("Error on executing call: %v", err)
+	}
+
+	videoItem := *(response.Items[0])
+
+	var videoDuration string
+
+	d, err := duration.ParseISO8601(videoItem.ContentDetails.Duration)
+	if err != nil {
+		utils.PrintfSTDERR("Error parsing video duration")
+		videoDuration = "n/a"
+	} else {
+		videoDuration = formatDuration(d)
+	}
+
+	return VideoInfo{
+		title:       videoItem.Snippet.Title,
+		channelName: videoItem.Snippet.ChannelTitle,
+		duration:    videoDuration,
+	}
+}
+
+func SearchVideosByIds(videoIds []string, apiKey string) *[]VideoInfo {
+	youtubeService := generateYoutubeService(apiKey)
+
+	vInfos := make([]VideoInfo, 0)
+
+	for _, vId := range videoIds {
+		vInfos = append(vInfos, getVideoInfoByVideoId(youtubeService, vId))
+	}
+
+	return &vInfos
 }

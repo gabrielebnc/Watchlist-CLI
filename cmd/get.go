@@ -19,6 +19,7 @@ var (
 		//TODO add actual args validation
 
 		Run: func(cmd *cobra.Command, args []string) {
+			utils.PrintfSTDOUT(persistencePath)
 
 			arg := args[0]
 
